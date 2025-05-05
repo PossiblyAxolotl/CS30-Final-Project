@@ -8,8 +8,10 @@
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  textAlign(CENTER, CENTER);
 }
 
 function draw() {
   background(220);
+  text("Nothing yet...", width/2, height/2);
 }
