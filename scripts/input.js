@@ -15,6 +15,20 @@ function buttonDown() {
   return keyIsDown(DOWN_ARROW) || keyIsDown(83) /* S */ || keyIsDown(75) /* K */;
 }
 
+// Other used inputs
+function buttonRun() {
+  return keyIsDown(SHIFT);
+}
+
+function buttonJump() {
+  return keyIsDown(32) /* SPACE */;
+}
+
+function buttonInteract() {
+  // I would put parenthesis around the mouseIsPressed & mouseButton part for neatness but apparently eslint doesn't like that
+  return keyIsDown(69) /* E */ || mouseIsPressed && mouseButton === LEFT /* Left click */;
+}
+
 // Axis functions
 function horizontalButtons() {
   return buttonRight() - buttonLeft();
