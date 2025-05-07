@@ -45,7 +45,7 @@ class Player {
   moveWithInput() {
     let i = input(); // scripts/input.js
     
-    // consider X and Z movement separately at first
+    // consider relative X and Z movement separately at first
     let forwards = p5.Vector.fromAngle(deg2rad(player.rY));
     let right    = p5.Vector.fromAngle(deg2rad(player.rY+90));
 
