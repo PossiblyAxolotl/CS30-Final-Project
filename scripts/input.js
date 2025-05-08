@@ -15,18 +15,30 @@ function buttonDown() {
   return keyIsDown(DOWN_ARROW) || keyIsDown(83) /* S */ || keyIsDown(75) /* K */;
 }
 
-// Other used inputs
 function buttonRun() {
   return keyIsDown(SHIFT);
 }
 
+// one-shot inputs
+let previousSpace    = false;
+let previousInteract = false;
+
 function buttonJump() {
-  return keyIsDown(32) /* SPACE */;
+  let spacePressed = keyIsDown(32) /* SPACE */;
+
+  let response = spacePressed && spacePressed !== previousSpace;
+  previousSpace = spacePressed;
+
+  return response;
 }
 
 function buttonInteract() {
-  // I would put parenthesis around the mouseIsPressed & mouseButton part for neatness but apparently eslint doesn't like that
-  return keyIsDown(69) /* E */ || mouseIsPressed && mouseButton === LEFT /* Left click */;
+  let interactPressed = keyIsDown(69) /* E */ || mouseIsPressed && mouseButton === LEFT /* Left click */;
+  
+  let response = interactPressed && interactPressed !== previousInteract;
+  previousInteract = interactPressed;
+
+  return response;
 }
 
 // Axis functions
