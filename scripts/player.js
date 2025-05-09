@@ -1,5 +1,5 @@
-const WALK_SPEED  = 180;
-const RUN_SPEED   = 250;
+const WALK_SPEED  = 200;
+const RUN_SPEED   = 280;
 const JUMP_HEIGHT = -5;
 const GRAVITY     = 9.8;
 

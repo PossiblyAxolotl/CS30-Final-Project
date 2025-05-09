@@ -13,6 +13,8 @@ let sensitivity = 0.1;
 
 let player = new Player(0, -100, 0);
 
+let floor = new staticBox(0, 50, 0, 500, 50, 500);
+
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   frameRate(60);
@@ -24,18 +26,14 @@ function draw() {
   player.process();
 
   push();
-  translate(0,-25,0);
+  translate(0,-25 + Math.sin(millis()/1000) * 7,0);
   rotateX(millis()/1000);
   rotateY(millis()/700);
-  box(50);
+  //box(50);
+  torus(30, 15, 5, 3);
   pop();
 
-  push();
-  scale(10,1,10);
-  translate(0,50,0);
-  fill("gray");
-  box(50);
-  pop();
+  updateBoxes();
 }
 
 function mouseClicked() {
