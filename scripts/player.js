@@ -1,7 +1,8 @@
-const WALK_SPEED  = 200;
-const RUN_SPEED   = 280;
-const JUMP_HEIGHT = -5;
-const GRAVITY     = 9.8;
+const WALK_SPEED    = 200;
+const RUN_SPEED     = 280;
+const JUMP_HEIGHT   = -5;
+const GRAVITY       = 9.8;
+const PLAYER_HEIGHT = 100;
 
 const NECK_MIN_ANGLE = -179;
 const NECK_MAX_ANGLE = -1;
@@ -45,8 +46,8 @@ class Player {
     let i = input(); // scripts/input.js
     
     // consider relative X and Z movement separately at first
-    let forwards = p5.Vector.fromAngle(deg2rad(player.rY));
-    let right    = p5.Vector.fromAngle(deg2rad(player.rY+90));
+    let forwards = p5.Vector.fromAngle(deg2rad(this.rY));
+    let right    = p5.Vector.fromAngle(deg2rad(this.rY+90));
 
     forwards.mult(i.y); // y = W/S =  fwd/back
     right.mult(i.x);    // x = A/D = left/right
@@ -79,11 +80,25 @@ class Player {
       this.dY = JUMP_HEIGHT;
     }
 
+    this.collideWithBoxes(boxes);
+
     this.y += this.dY;
 
     // TEMPORARY FLOOR BARRIER
-    if (this.y > -100) {
+    /*if (this.y > -100) {
       this.y = -100;
+    }*/
+  }
+
+  collideWithBoxes(boxes) {
+    for (let box of boxes) {
+      let corners = box.getCollisionArea();
+
+      if (this.x > corners.x1 && this.x < corners.x2) {
+        if (this.z > corners.z1 && this.z < corners.z2) {
+          this.dY = collide1D(this.y, this.dY, corners.y1, corners.y2);
+        }
+      }
     }
   }
 
@@ -94,4 +109,18 @@ class Player {
     // look from current position in the direction of the vector
     camera(this.x, this.y, this.z, this.x + v.x, this.y + v.y, this.z + v.z);
   }
+}
+
+// Modified from interactive scene project
+function collide1D(position, velocity, barrier, end = null) {
+  // before -> after
+  if (velocity > 0 && position <= barrier) {
+    return position + velocity + PLAYER_HEIGHT > barrier ? barrier - position - PLAYER_HEIGHT : velocity;
+  } 
+  // after -> before
+  else if (end !== null && velocity < 0 && position >= end) {
+    return position + velocity < end ? end - position : velocity; 
+  }
+  
+  return velocity;
 }

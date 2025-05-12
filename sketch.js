@@ -11,7 +11,7 @@ const DELTA_RATIO = 1000;
 
 let sensitivity = 0.1;
 
-let player = new Player(0, -100, 0);
+let player = new Player(0, -800, 0);
 
 let floor = new staticBox(0, 50, 0, 500, 50, 500);
 
