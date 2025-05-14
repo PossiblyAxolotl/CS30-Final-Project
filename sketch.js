@@ -11,6 +11,7 @@
 // FIXME: Player moves independently on each axis meaning corners don't collide, prev. may assist (?)
 // TODO: Don't process each axis independently, that doesn't work, player is a cylinder, etc.
 // TODO: when walking into something it applies force back to keep it out (?)
+// Base collisions around this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
 
 const DELTA_RATIO = 1000;
 
@@ -21,7 +22,7 @@ let player = new Player(0, -800, 0);
 new staticBox(0, 50, 0, 1000, 50, 1000);
 new staticBox(550, 100, 550, 100, 100, 100);
 new staticBox(200, -100, -100, 100, 100, 100);
-new staticBox(0, -150, 0, 75, 50, 75);
+new staticBox(0, -180, 0, 75, 50, 75);
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);

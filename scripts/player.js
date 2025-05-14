@@ -1,12 +1,12 @@
-const WALK_SPEED    = 200;
-const RUN_SPEED     = 280;
-const JUMP_HEIGHT   = -5;
-const GRAVITY       = 9.8;
+const WALK_SPEED  = 200;
+const RUN_SPEED   = 280;
+const JUMP_HEIGHT = -5;
+const GRAVITY     = 9.8;
 
 // Player dimensions
 const PLAYER_WIDTH    = 80;
 const PLAYER_HEIGHT   = 100;
-const PLAYER_FOREHEAD = 25; // additional height over camera for collision
+const PLAYER_FOREHEAD = 50; // additional height over camera for collision
 
 const NECK_MIN_ANGLE = -179;
 const NECK_MAX_ANGLE = -1;
@@ -81,11 +81,6 @@ class Player {
     }
 
     this.collideWithBoxes(boxes);
-
-    // TEMPORARY FLOOR BARRIER
-    /*if (this.y > -100) {
-      this.y = -100;
-    }*/
   }
 
   move() {
@@ -106,15 +101,17 @@ class Player {
       let zInline = this.z + PLAYER_WIDTH / 2 > corners.z1 && this.z - PLAYER_WIDTH / 2 < corners.z2;
       let yInline = this.y + PLAYER_HEIGHT > corners.y1 && this.y - PLAYER_FOREHEAD < corners.y2;
 
+      // vertical collisions
       if (xInline && zInline) {
         let pdY = this.dY; // prev. dY
         this.dY = collide1D(this.y, this.dY, corners.y1, corners.y2, PLAYER_HEIGHT, PLAYER_FOREHEAD);
 
+        // if you were falling and you slowed down (hit the ground)
         if (pdY > 0 && this.dY < pdY) {
           this.onFloor = true;
         }
       }
-
+      
       if (xInline && yInline) {
         this.dZ = collide1D(this.z, this.dZ, corners.z1, corners.z2, PLAYER_WIDTH, PLAYER_WIDTH);
       }
@@ -142,7 +139,7 @@ function collide1D(position, velocity, barrier, end = null, downReach = 0, upRea
   } 
   // after -> before
   else if (end !== null && velocity < 0 && position >= end) {
-    return position + velocity < end ? end - position : velocity; 
+    return position + velocity - upReach < end ? end - position + upReach : velocity; 
   }
   
   return velocity;
