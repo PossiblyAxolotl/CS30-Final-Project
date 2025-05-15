@@ -112,12 +112,34 @@ class Player {
         }
       }
       
-      if (xInline && yInline) {
+      /*if (xInline && yInline) {
         this.dZ = collide1D(this.z, this.dZ, corners.z1, corners.z2, PLAYER_WIDTH, PLAYER_WIDTH);
       }
 
       if (yInline && zInline) {
         this.dX = collide1D(this.x, this.dX, corners.x1, corners.x2, PLAYER_WIDTH, PLAYER_WIDTH);
+      }*/
+
+      // new collisions
+      let closestX = clamp(this.x, box.x - box.sx / 2, box.x + box.sx / 2);
+      let closestY = clamp(this.y, box.y - box.sy / 2, box.y + box.sy / 2);
+      let closestZ = clamp(this.z, box.z - box.sz / 2, box.z + box.sz / 2);
+
+      push();
+      translate(closestX, closestY, closestZ);
+      sphere(20);
+      pop();
+
+      let distance = dist(this.x, this.z, closestX, closestZ);
+
+      if (yInline) {
+        if (distance < PLAYER_WIDTH) {
+          let pushvec = p5.Vector.fromAngle(atan2(this.z - closestZ, this.x-closestX));
+          let pushfac = PLAYER_WIDTH - distance;
+
+          this.x += pushvec.x * pushfac;
+          this.z += pushvec.y * pushfac;
+        }
       }
     }
   }
