@@ -35,7 +35,7 @@ function draw() {
   player.process();
 
   push();
-  translate(0,-25 + Math.sin(millis()/1000) * 7,0);
+  translate(0,-25 + Math.sin(millis()/1000) * 7,200);
   rotateX(millis()/1000);
   rotateY(millis()/700);
   //box(50);
