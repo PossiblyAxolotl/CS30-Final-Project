@@ -125,16 +125,17 @@ class Player {
       let closestY = clamp(this.y, box.y - box.sy / 2, box.y + box.sy / 2);
       let closestZ = clamp(this.z, box.z - box.sz / 2, box.z + box.sz / 2);
 
+      // debug point
       push();
       translate(closestX, closestY, closestZ);
-      sphere(20);
+      sphere(2);
       pop();
 
       let distance = dist(this.x, this.z, closestX, closestZ);
 
       if (yInline) {
         if (distance < PLAYER_WIDTH) {
-          let pushvec = p5.Vector.fromAngle(atan2(this.z - closestZ, this.x-closestX));
+          let pushvec = p5.Vector.fromAngle(atan2(this.z - closestZ, this.x - closestX));
           let pushfac = PLAYER_WIDTH - distance;
 
           this.x += pushvec.x * pushfac;

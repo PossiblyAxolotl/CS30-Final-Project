@@ -7,10 +7,8 @@
 
 // additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/staticbody.js
 
-// FIXME: Player is infinitely thin allowing it to fall through tiny gaps
-// FIXME: Player moves independently on each axis meaning corners don't collide, prev. may assist (?)
-// TODO: Don't process each axis independently, that doesn't work, player is a cylinder, etc.
-// TODO: when walking into something it applies force back to keep it out (?)
+// FIXME: Player vertical collisions still are seen as inf. thin, player falls through edges and is forced out
+// TODO: Figure out the closest player point to the wall point and test collisions between them, this will allow all 3 axes
 // Base collisions around this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
 
 const DELTA_RATIO = 1000;
