@@ -17,7 +17,7 @@ let sensitivity = 0.1;
 
 let player = new Player(0, -800, 0);
 
-new staticBox(0, 50, 0, 1000, 50, 1000);
+let floor = new staticBox(0, 50, 0, 1000, 50, 1000);
 new staticBox(550, 100, 550, 100, 100, 100);
 new staticBox(200, -100, -100, 100, 100, 100);
 new staticBox(0, -180, 0, 75, 50, 75);

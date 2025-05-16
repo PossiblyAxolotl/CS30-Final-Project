@@ -4,7 +4,7 @@ const JUMP_HEIGHT = -5;
 const GRAVITY     = 9.8;
 
 // Player dimensions
-const PLAYER_WIDTH    = 80;
+const PLAYER_WIDTH    = 50;
 const PLAYER_HEIGHT   = 100;
 const PLAYER_FOREHEAD = 50; // additional height over camera for collision
 
@@ -97,33 +97,13 @@ class Player {
     for (let box of boxes) {
       let corners = box.getCollisionArea();
 
-      let xInline = this.x + PLAYER_WIDTH / 2 > corners.x1 && this.x - PLAYER_WIDTH / 2 < corners.x2;
-      let zInline = this.z + PLAYER_WIDTH / 2 > corners.z1 && this.z - PLAYER_WIDTH / 2 < corners.z2;
-      let yInline = this.y + PLAYER_HEIGHT > corners.y1 && this.y - PLAYER_FOREHEAD < corners.y2;
-
-      // vertical collisions
-      if (xInline && zInline) {
-        let pdY = this.dY; // prev. dY
-        this.dY = collide1D(this.y, this.dY, corners.y1, corners.y2, PLAYER_HEIGHT, PLAYER_FOREHEAD);
-
-        // if you were falling and you slowed down (hit the ground)
-        if (pdY > 0 && this.dY < pdY) {
-          this.onFloor = true;
-        }
-      }
-      
-      /*if (xInline && yInline) {
-        this.dZ = collide1D(this.z, this.dZ, corners.z1, corners.z2, PLAYER_WIDTH, PLAYER_WIDTH);
-      }
-
-      if (yInline && zInline) {
-        this.dX = collide1D(this.x, this.dX, corners.x1, corners.x2, PLAYER_WIDTH, PLAYER_WIDTH);
-      }*/
 
       // new collisions
       let closestX = clamp(this.x, box.x - box.sx / 2, box.x + box.sx / 2);
       let closestY = clamp(this.y, box.y - box.sy / 2, box.y + box.sy / 2);
       let closestZ = clamp(this.z, box.z - box.sz / 2, box.z + box.sz / 2);
+
+      let yInline = this.y + PLAYER_HEIGHT > corners.y1 && this.y - PLAYER_FOREHEAD < corners.y2;
 
       // debug point
       push();
@@ -135,11 +115,26 @@ class Player {
 
       if (yInline) {
         if (distance < PLAYER_WIDTH) {
-          let pushvec = p5.Vector.fromAngle(atan2(this.z - closestZ, this.x - closestX));
-          let pushfac = PLAYER_WIDTH - distance;
+          let pushVec = p5.Vector.fromAngle(atan2(this.z - closestZ, this.x - closestX));
+          let pushFac = PLAYER_WIDTH - distance;
 
-          this.x += pushvec.x * pushfac;
-          this.z += pushvec.y * pushfac;
+          pushVec.mult(pushFac);
+
+          this.x += pushVec.x;
+          this.z += pushVec.y;
+        }
+      }
+
+      let xzInline = dist(this.x, this.z, closestX, closestZ) < PLAYER_WIDTH;
+
+      if (xzInline) {
+        let pdY = this.dY; // prev. dY
+
+        this.dY = collide1D(this.y, this.dY, corners.y1, corners.y2, PLAYER_HEIGHT, PLAYER_FOREHEAD);
+
+        // if you were falling and you slowed down (hit the ground)
+        if (pdY > 0 && this.dY < pdY) {
+          this.onFloor = true;
         }
       }
     }
@@ -150,7 +145,12 @@ class Player {
     let v = p5.Vector.fromAngles(deg2rad(this.rX), deg2rad(this.rY));
 
     // look from current position in the direction of the vector
-    camera(this.x, this.y, this.z, this.x + v.x, this.y + v.y, this.z + v.z);
+    let c = camera(this.x, this.y, this.z, this.x + v.x, this.y + v.y, this.z + v.z);
+
+    c.perspective(
+      deg2rad(80),
+      width/height,
+    );
   }
 }
 
