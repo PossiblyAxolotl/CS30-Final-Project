@@ -25,6 +25,9 @@ new staticBox(0, -180, 0, 75, 50, 75);
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   frameRate(60);
+
+  aspectRatio = width/height;
+  cameraFOV = 2 * atan(height / 2 / 800);
 }
 
 function draw() {

@@ -4,12 +4,17 @@ const JUMP_HEIGHT = -5;
 const GRAVITY     = 9.8;
 
 // Player dimensions
-const PLAYER_WIDTH    = 50;
+const PLAYER_WIDTH    = 30;
 const PLAYER_HEIGHT   = 100;
-const PLAYER_FOREHEAD = 50; // additional height over camera for collision
+const PLAYER_FOREHEAD = 20; // additional height over camera for collision
 
 const NECK_MIN_ANGLE = -179;
 const NECK_MAX_ANGLE = -1;
+
+// Camera params
+let AspectRatio, CameraFOV; // defined using screen width and height in setup()
+const NEAR_PLANE = 0;
+const FAR_PLANE  = 5 * 800;
 
 class Player {
   constructor(x=0, y=0, z=0, rY=0, rX=-90) {
@@ -79,13 +84,12 @@ class Player {
       this.dY = JUMP_HEIGHT;
       this.onFloor = false;
     }
-
-    this.collideWithBoxes(boxes);
   }
 
   move() {
     this.moveWithInput();
     this.moveWithGravity();
+    this.collideWithBoxes(boxes);
 
     // move player
     this.x += this.dX;
@@ -93,6 +97,7 @@ class Player {
     this.y += this.dY;
   }
 
+  // collision based on this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
   collideWithBoxes(boxes) {
     for (let box of boxes) {
       let corners = box.getCollisionArea();
@@ -127,15 +132,9 @@ class Player {
 
       let xzInline = dist(this.x, this.z, closestX, closestZ) < PLAYER_WIDTH;
 
+      // FIXME: I think this is the problem area
       if (xzInline) {
-        let pdY = this.dY; // prev. dY
-
-        this.dY = collide1D(this.y, this.dY, corners.y1, corners.y2, PLAYER_HEIGHT, PLAYER_FOREHEAD);
-
-        // if you were falling and you slowed down (hit the ground)
-        if (pdY > 0 && this.dY < pdY) {
-          this.onFloor = true;
-        }
+        this.y += atan(this.y - closestY) * 10;
       }
     }
   }
@@ -148,8 +147,10 @@ class Player {
     let c = camera(this.x, this.y, this.z, this.x + v.x, this.y + v.y, this.z + v.z);
 
     c.perspective(
-      deg2rad(80),
-      width/height,
+      CameraFOV,
+      AspectRatio,
+      NEAR_PLANE,
+      FAR_PLANE
     );
   }
 }
