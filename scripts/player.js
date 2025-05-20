@@ -12,8 +12,8 @@ const NECK_MIN_ANGLE = -179;
 const NECK_MAX_ANGLE = -1;
 
 // Camera params
-let AspectRatio, CameraFOV; // defined using screen width and height in setup()
-const NEAR_PLANE = 0;
+let aspectRatio, cameraFOV; // defined using screen width and height in setup()
+const NEAR_PLANE = 0.01;
 const FAR_PLANE  = 5 * 800;
 
 class Player {
@@ -108,6 +108,10 @@ class Player {
       let closestY = clamp(this.y, box.y - box.sy / 2, box.y + box.sy / 2);
       let closestZ = clamp(this.z, box.z - box.sz / 2, box.z + box.sz / 2);
 
+      let closestPlayerX = clamp(closestX, this.x - PLAYER_WIDTH/2, this.x + PLAYER_WIDTH/2);
+      let closestPlayerY = clamp(closestY, this.y - PLAYER_FOREHEAD, this.y + PLAYER_HEIGHT);
+      let closestPlayerZ = clamp(closestZ, this.z - PLAYER_WIDTH/2, this.z + PLAYER_WIDTH/2);
+
       let yInline = this.y + PLAYER_HEIGHT > corners.y1 && this.y - PLAYER_FOREHEAD < corners.y2;
 
       // debug point
@@ -116,26 +120,14 @@ class Player {
       sphere(2);
       pop();
 
-      let distance = dist(this.x, this.z, closestX, closestZ);
+      push();
+      stroke("red");
+      translate(closestPlayerX, closestPlayerY, closestPlayerZ);
+      sphere(2);
+      pop();
 
-      if (yInline) {
-        if (distance < PLAYER_WIDTH) {
-          let pushVec = p5.Vector.fromAngle(atan2(this.z - closestZ, this.x - closestX));
-          let pushFac = PLAYER_WIDTH - distance;
+      let distance = dist(closestPlayerX, closestPlayerY, closestPlayerZ, closestX, closestY, closestZ);
 
-          pushVec.mult(pushFac);
-
-          this.x += pushVec.x;
-          this.z += pushVec.y;
-        }
-      }
-
-      let xzInline = dist(this.x, this.z, closestX, closestZ) < PLAYER_WIDTH;
-
-      // FIXME: I think this is the problem area
-      if (xzInline) {
-        this.y += atan(this.y - closestY) * 10;
-      }
     }
   }
 
@@ -147,8 +139,8 @@ class Player {
     let c = camera(this.x, this.y, this.z, this.x + v.x, this.y + v.y, this.z + v.z);
 
     c.perspective(
-      CameraFOV,
-      AspectRatio,
+      cameraFOV,
+      aspectRatio,
       NEAR_PLANE,
       FAR_PLANE
     );
