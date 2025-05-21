@@ -89,45 +89,41 @@ class Player {
   move() {
     this.moveWithInput();
     this.moveWithGravity();
-    this.collideWithBoxes(boxes);
 
     // move player
     this.x += this.dX;
     this.z += this.dZ;
     this.y += this.dY;
+
+    this.moveAndCollide(boxes);
   }
 
   // collision based on this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
-  collideWithBoxes(boxes) {
+  moveAndCollide(boxes) {
+    let oldPosition = createVector(this.x, this.y, this.z);
+
+    this.x += this.dX;
+    this.y += this.dY;
+    this.z += this.dZ;
+
     for (let box of boxes) {
       let corners = box.getCollisionArea();
 
+      if (oldPosition.y < corners.y1 && this.y > corners.y1) {
+        this.y = corners.y1 - PLAYER_HEIGHT;
+        this.dY = 0;
+      }
 
       // new collisions
       let closestX = clamp(this.x, box.x - box.sx / 2, box.x + box.sx / 2);
       let closestY = clamp(this.y, box.y - box.sy / 2, box.y + box.sy / 2);
       let closestZ = clamp(this.z, box.z - box.sz / 2, box.z + box.sz / 2);
 
-      let closestPlayerX = clamp(closestX, this.x - PLAYER_WIDTH/2, this.x + PLAYER_WIDTH/2);
-      let closestPlayerY = clamp(closestY, this.y - PLAYER_FOREHEAD, this.y + PLAYER_HEIGHT);
-      let closestPlayerZ = clamp(closestZ, this.z - PLAYER_WIDTH/2, this.z + PLAYER_WIDTH/2);
-
-      let yInline = this.y + PLAYER_HEIGHT > corners.y1 && this.y - PLAYER_FOREHEAD < corners.y2;
-
       // debug point
       push();
       translate(closestX, closestY, closestZ);
       sphere(2);
       pop();
-
-      push();
-      stroke("red");
-      translate(closestPlayerX, closestPlayerY, closestPlayerZ);
-      sphere(2);
-      pop();
-
-      let distance = dist(closestPlayerX, closestPlayerY, closestPlayerZ, closestX, closestY, closestZ);
-
     }
   }
 
