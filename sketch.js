@@ -7,12 +7,6 @@
 
 // additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/staticbody.js
 
-// FIXME: Player vertical collisions still are seen as inf. thin, player falls through edges and is forced out
-// TODO: Figure out the closest player point to the wall point and test collisions between them, this will allow all 3 axes
-// Base collisions around this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
-// study move_and_slide https://github.com/godotengine/godot/blob/master/scene/3d/physics/character_body_3d.cpp
-// move_and_collide https://github.com/godotengine/godot/blob/master/scene/3d/physics/physics_body_3d.cpp#L108
-
 const DELTA_RATIO = 1000;
 
 let sensitivity = 0.1;
