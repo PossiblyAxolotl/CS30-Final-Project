@@ -1,10 +1,7 @@
 let boxes = [];
 
-//// add planes with plane(w, h)
-//// OR quad(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4), though it may be easier to make a plane system or ignore and keep boxes
-// solid flat cubic ground
-class staticBox {
-  constructor(x, y, z, sx, sy, sz) {
+class StaticBox {
+  constructor(x, y, z, sx, sy, sz, color = "white") {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -12,10 +9,14 @@ class staticBox {
     this.sy = sy;
     this.sz = sz;
 
+    this.color = color;
+
     boxes.push(this);
   }
 
   draw() {
+    fill(this.color);
+
     push();
     translate(this.x, this.y, this.z);
     scale(this.sx, this.sy, this.sz);
