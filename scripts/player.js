@@ -33,6 +33,8 @@ class Player {
     this.rX = rX; //   up & down
     this.rY = rY; // left & right
 
+    this.lookVec;
+
     this.onFloor = true;
   }
 
@@ -49,6 +51,8 @@ class Player {
 
     // clamp vertical movement as to not snap neck
     this.rX = clamp(this.rX, NECK_MIN_ANGLE, NECK_MAX_ANGLE);
+
+    this.rY = this.rY % 360;
   }
 
   moveWithInput() {
@@ -156,10 +160,10 @@ class Player {
 
   displayCamera() {
     // get a vector of what direction to look from rotation
-    let v = p5.Vector.fromAngles(deg2rad(this.rX), deg2rad(this.rY));
+    this.lookVec = p5.Vector.fromAngles(deg2rad(this.rX), deg2rad(this.rY));
 
     // look from current position in the direction of the vector
-    let c = camera(this.x, this.y, this.z, this.x + v.x, this.y + v.y, this.z + v.z);
+    let c = camera(this.x, this.y, this.z, this.x + this.lookVec.x, this.y + this.lookVec.y, this.z + this.lookVec.z);
 
     c.perspective(
       cameraFOV * fovFactor,

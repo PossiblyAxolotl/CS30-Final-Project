@@ -34,6 +34,7 @@ function draw() {
   background(220);
 
   player.process();
+  processButtons();
 
   push();
   colorMode(HSB);
