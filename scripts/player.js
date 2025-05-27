@@ -11,12 +11,6 @@ const PLAYER_FOREHEAD = 20; // additional height over camera for collision
 const NECK_MIN_ANGLE = -179;
 const NECK_MAX_ANGLE = -1;
 
-// Camera params
-let aspectRatio, cameraFOV; // defined using screen width and height in setup()
-let fovFactor = 0;
-const NEAR_PLANE = 0.01;
-const FAR_PLANE  = 5 * 800;
-
 class Player {
   constructor(x=0, y=0, z=0, rY=0, rX=-90) {
     // Position
@@ -80,7 +74,7 @@ class Player {
     this.dZ = trimSmall(this.dZ);
 
     if (dist(this.dX, this.dZ, 0, 0) > 2) {
-      fovFactor = lerp(fovFactor, buttonRun() ? 1.2 : 1, 0.1);
+      fovFactor = lerp(fovFactor, buttonRun() ? RUN_FOVFAC : DEFAULT_FOVFAC, 0.1);
     } 
     else {
       fovFactor = lerp(fovFactor, 1, 0.1);
@@ -108,6 +102,10 @@ class Player {
   // collision based on this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
   moveAndCollide(boxes) {
     for (let box of boxes) {
+      if (!box.doCollide) {
+        continue;
+      }
+
       let corners = box.getCollisionArea();
 
       // collisions
@@ -115,9 +113,9 @@ class Player {
       let closestZ = clamp(this.z, box.z - box.sz / 2, box.z + box.sz / 2);
       let closestY = clamp(this.y, box.y - box.sy / 2, box.y + box.sy / 2);
 
-      let closestPlayerX = clamp(closestX, player.x + PLAYER_WIDTH/2, player.x - PLAYER_WIDTH/2);
+      /*let closestPlayerX = clamp(closestX, player.x + PLAYER_WIDTH/2, player.x - PLAYER_WIDTH/2);
       let closestPlayerZ = clamp(closestZ, player.z + PLAYER_WIDTH/2, player.z - PLAYER_WIDTH/2);
-      let closestPlayerY = clamp(closestY, box.y - box.sy / 2, box.y + box.sy / 2);
+      let closestPlayerY = clamp(closestY, box.y - box.sy / 2, box.y + box.sy / 2);*/
 
       let yInline = this.y + PLAYER_HEIGHT > corners.y1 && this.y - PLAYER_FOREHEAD < corners.y2;
 
@@ -163,9 +161,11 @@ class Player {
     this.lookVec = p5.Vector.fromAngles(deg2rad(this.rX), deg2rad(this.rY));
 
     // look from current position in the direction of the vector
-    let c = camera(this.x, this.y, this.z, this.x + this.lookVec.x, this.y + this.lookVec.y, this.z + this.lookVec.z);
+    //let c = camera(this.x, this.y, this.z, this.x + this.lookVec.x, this.y + this.lookVec.y, this.z + this.lookVec.z);
+    cam.setPosition(this.x, this.y, this.z);
+    cam.lookAt(this.x + this.lookVec.x, this.y + this.lookVec.y, this.z + this.lookVec.z);
 
-    c.perspective(
+    cam.perspective(
       cameraFOV * fovFactor,
       aspectRatio,
       NEAR_PLANE,
