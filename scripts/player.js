@@ -17,6 +17,7 @@ class Player {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.position = createVector(x, y, z);
 
     // Velocity
     this.dX = 0;

@@ -29,9 +29,10 @@ new StaticBox(550, 100, 550, 100, 100, 100);
 new StaticBox(-550, 100, 550, 200, 100, 200);
 new StaticBox(200, -100, -100, 100, 100, 100);
 new StaticBox(0, -180, 0, 75, 50, 75);
-new BoxButton(-100, 20, 0, floor);
 
 let b = new GrabBox(0,0,0);
+
+new ButtonBox(-100, 20, 0, b);
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
