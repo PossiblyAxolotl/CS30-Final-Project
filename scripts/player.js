@@ -100,15 +100,14 @@ class Player {
     this.moveAndCollide(boxes);
   }
 
-  // collision based on this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
   moveAndCollide(boxes) {
     for (let box of boxes) {
-      if (box.isOverlappingCylinder(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_WIDTH/2)) {
+      let overlapAfterMove = box.isOverlappingCylinder(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
+      
+      if (overlapAfterMove) {
         this.dX = 0;
         this.dY = 0;
         this.dZ = 0;
-
-        console.log("OVERLAP");
 
         this.onFloor = true;
       }
