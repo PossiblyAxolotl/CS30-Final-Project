@@ -24,6 +24,7 @@ class StaticBox {
 
   process() {
     this.draw();
+    this.drawDebug();
   }
 
   draw() {
@@ -36,16 +37,34 @@ class StaticBox {
     pop();
   }
 
+  drawDebug() {
+    let closestX = clamp(player.x, this.x - this.sx / 2, this.x + this.sx / 2);
+    let closestZ = clamp(player.z, this.z - this.sz / 2, this.z + this.sz / 2);
+    let closestY = clamp(player.y, this.y - this.sy / 2, this.y + this.sy / 2);
+
+    push();
+    translate(closestX, closestY, closestZ);
+    sphere(2);
+    pop();
+  }
+
   signal(value) {
     console.log("Box " + boxes.indexOf(this) + " got a signal of " + value);
   }
 
-  isColliding(top, left, bottom, right, far, close) {
+  isOverlappingBox(x, y, z, sy, sz) {
 
   }
 
-  isCollidingCylinder(top, bottom, radius) {
-    
+  isOverlappingCylinder(x, y, z, height, radius) {
+    let closestX = clamp(x, this.x - this.sx / 2, this.x + this.sx / 2);
+    let closestZ = clamp(z, this.z - this.sz / 2, this.z + this.sz / 2);
+    let closestY = clamp(y, this.y - this.sy / 2, this.y + this.sy / 2);
+
+    let xzInline = dist(closestX, closestZ, x, z) <= radius;
+    let yInline  = y - PLAYER_FOREHEAD < closestY && y + PLAYER_HEIGHT > closestY;
+
+    return xzInline && yInline;
   }
 
   getCollisionArea() {

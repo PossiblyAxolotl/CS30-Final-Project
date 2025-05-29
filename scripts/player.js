@@ -17,7 +17,7 @@ class Player {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.position = createVector(x, y, z);
+    this.position ;
 
     // Velocity
     this.dX = 0;
@@ -103,53 +103,15 @@ class Player {
   // collision based on this test https://editor.p5js.org/3802203/sketches/MlKfVV2X8
   moveAndCollide(boxes) {
     for (let box of boxes) {
-      if (!box.doCollide) {
-        continue;
+      if (box.isOverlappingCylinder(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_WIDTH/2)) {
+        this.dX = 0;
+        this.dY = 0;
+        this.dZ = 0;
+
+        console.log("OVERLAP");
+
+        this.onFloor = true;
       }
-
-      let corners = box.getCollisionArea();
-
-      // collisions
-      let closestX = clamp(this.x, box.x - box.sx / 2, box.x + box.sx / 2);
-      let closestZ = clamp(this.z, box.z - box.sz / 2, box.z + box.sz / 2);
-      let closestY = clamp(this.y, box.y - box.sy / 2, box.y + box.sy / 2);
-
-      /*let closestPlayerX = clamp(closestX, player.x + PLAYER_WIDTH/2, player.x - PLAYER_WIDTH/2);
-      let closestPlayerZ = clamp(closestZ, player.z + PLAYER_WIDTH/2, player.z - PLAYER_WIDTH/2);
-      let closestPlayerY = clamp(closestY, box.y - box.sy / 2, box.y + box.sy / 2);*/
-
-      let yInline = this.y + PLAYER_HEIGHT > corners.y1 && this.y - PLAYER_FOREHEAD < corners.y2;
-
-      let distance = dist(this.x, this.z, closestX, closestZ);
-
-      if (yInline) {
-        if (distance < PLAYER_WIDTH) {
-          let pushvec = p5.Vector.fromAngle(atan2(this.z - closestZ, this.x - closestX));
-          let pushfac = PLAYER_WIDTH - distance;
-
-          this.x += pushvec.x * pushfac;
-          this.z += pushvec.y * pushfac;
-        }
-      }
-
-      let xzInline = dist(this.x, this.z, closestX, closestZ) < PLAYER_WIDTH*0.9;
-
-      if (xzInline && closestY > this.y-PLAYER_FOREHEAD + this.dY && closestY < this.y + this.dY + PLAYER_HEIGHT) {
-        let pdY = this.dY; // prev. dY
-        this.dY = collide1D(this.y, this.dY, corners.y1, corners.y2, PLAYER_HEIGHT, PLAYER_FOREHEAD);
-
-        // if you were falling and you slowed down (hit the ground)
-        if (pdY > 0 && this.dY < pdY) {
-          this.onFloor = true;
-        }
-      }
-
-      // debug point
-      push();
-      translate(closestX, closestY, closestZ);
-      sphere(2);
-      pop();
-
     }
 
     this.x += this.dX;
