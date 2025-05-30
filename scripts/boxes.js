@@ -40,12 +40,10 @@ class StaticBox {
   }
 
   drawDebug() {
-    let closestX = clamp(player.x, this.x - this.sx / 2, this.x + this.sx / 2);
-    let closestZ = clamp(player.z, this.z - this.sz / 2, this.z + this.sz / 2);
-    let closestY = clamp(player.y, this.y - this.sy / 2, this.y + this.sy / 2);
+    let closest = this.getClosest(player.x, player.y, player.z);
 
     push();
-    translate(closestX, closestY, closestZ);
+    translate(closest.x, closest.y, closest.z);
     sphere(2);
     pop();
   }
@@ -58,11 +56,7 @@ class StaticBox {
   // collison
   isOverlappingBox(x, y, z, sx, sy, sz) {
     // closest point on this box to the other one
-    let closest = createVector(
-      clamp(x, this.x - this.sx / 2, this.x + this.sx / 2), // x
-      clamp(y, this.y - this.sy / 2, this.y + this.sy / 2), // y
-      clamp(z, this.z - this.sz / 2, this.z + this.sz / 2)  // z
-    );
+    let closest = this.getClosest(x, y, z);
 
     let xOverlap = Math.sign(x - sx/2 - closest.x) !== Math.sign(x + sx/2 - closest.x);
     let yOverlap = Math.sign(y - sy/2 - closest.y) !== Math.sign(y + sy/2 - closest.y);
@@ -71,19 +65,26 @@ class StaticBox {
     return xOverlap && yOverlap && zOverlap;
   }
 
-  isOverlappingCylinder(x, y, z, downHeight, upHeight, radius) {
+  isOverlappingPlayer(x, y, z, downHeight, upHeight, radius) {
     // closest point on this box to the cylinder
-    let closest = createVector(
-      clamp(x, this.x - this.sx / 2, this.x + this.sx / 2), // x
-      clamp(y, this.y - this.sy / 2, this.y + this.sy / 2), // y
-      clamp(z, this.z - this.sz / 2, this.z + this.sz / 2)  // z
-    );
-
+    let closest = this.getClosest(x, y, z);
 
     let xzInline = dist(closest.x, closest.z, x, z) <= radius;
     let yInline  = y - upHeight < closest.y && y + downHeight > closest.y;
 
     return xzInline && yInline;
+  }
+
+  getClosest(x, y, z) {
+    return createVector(
+      clamp(x, this.x - this.sx / 2, this.x + this.sx / 2), // x
+      clamp(y, this.y - this.sy / 2, this.y + this.sy / 2), // y
+      clamp(z, this.z - this.sz / 2, this.z + this.sz / 2)  // z
+    );
+  }
+
+  isColliding() {
+    return this.doCollide;
   }
 }
 
@@ -118,9 +119,19 @@ class GrabBox extends StaticBox {
       let ly = lerp(this.y, player.y + positionVec.y, CRATE_LERP);
       let lz = lerp(this.z, player.z + positionVec.z, CRATE_LERP);
 
-      let doesOverlap = floor.isOverlappingBox(lx, ly, lz, this.sx, this.sy, this.sz);
+      let doesOverlap = false;
+      
+      for (let boxID = 0; boxID < boxes.length -1; boxID++) {
+        if (boxID === boxes.indexOf(this)) {
+          continue;
+        }
+        let box = boxes[boxID];
+        if (box.isOverlappingBox(lx, ly, lz, this.sx, this.sy, this.sz)) {
+          doesOverlap = true;
+        }
+      }
 
-      if (buttonInteract()) {
+      if (buttonInteract() && !this.isOverlappingPlayer(player.x, player.y, player.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2)) {
         this.isGrabbed = false;
         this.doCollide = true;
       }

@@ -100,11 +100,13 @@ class Player {
     this.moveAndCollide(boxes);
   }
 
+  // use this still https://editor.p5js.org/3802203/sketches/MlKfVV2X8
   moveAndCollide(boxes) {
     for (let box of boxes) {
-      let overlapAfterMove = box.isOverlappingCylinder(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
+      let overlapBeforeMove = box.isOverlappingPlayer(this.x, this.y, this.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
+      let overlapAfterMove = box.isOverlappingPlayer(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
       
-      if (overlapAfterMove) {
+      if (overlapAfterMove && box.isColliding()) {
         this.dX = 0;
         this.dY = 0;
         this.dZ = 0;
