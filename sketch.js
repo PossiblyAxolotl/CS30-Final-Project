@@ -34,6 +34,8 @@ let b = new GrabBox(0,0,0);
 
 new ButtonBox(-100, 20, 0, b);
 
+let bb = new PhysicsBox(20, -1200, 20);
+
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   frameRate(60);

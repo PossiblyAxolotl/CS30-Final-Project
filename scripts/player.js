@@ -30,6 +30,8 @@ class Player {
 
     this.lookVec;
 
+    this.grabbedObject = null;
+
     this.onFloor = true;
   }
 

@@ -6,6 +6,7 @@ const BUTTON_RAY_AREA = 60;
 const BUTTON_RAY_LENGTH = 50;
 const CRATE_SIZE = 30;
 const CRATE_LERP = 0.5;
+const CRATE_MAX_OVERLAP = 20;
 
 class StaticBox {
   constructor(x, y, z, sx, sy, sz, color = "white") {
@@ -92,10 +93,6 @@ class GrabBox extends StaticBox {
   constructor(x, y, z) {
     super(x, y, z, CRATE_SIZE, CRATE_SIZE, CRATE_SIZE, "white");
 
-    this.dX = 0;
-    this.dY = 0;
-    this.dZ = 0;
-
     this.spawnX = x;
     this.spawnY = y;
     this.spawnZ = z;
@@ -126,7 +123,7 @@ class GrabBox extends StaticBox {
           continue;
         }
         let box = boxes[boxID];
-        if (box.isOverlappingBox(lx, ly, lz, this.sx, this.sy, this.sz)) {
+        if (box.isOverlappingBox(player.x + positionVec.x, player.y + positionVec.y, player.z + positionVec.z, this.sx, this.sy, this.sz)) {
           doesOverlap = true;
         }
       }
@@ -145,6 +142,14 @@ class GrabBox extends StaticBox {
     this.draw();
   }
 
+  ungrabbedProcess() {
+
+  }
+
+  grabbedProcess() {
+
+  }
+
   // receive signals from other boxes to reset position
   signal(_value /* not used */) {
     this.x = this.spawnX;
@@ -153,9 +158,33 @@ class GrabBox extends StaticBox {
   }
 }
 
-function updateBoxes() {
-  for (let box of boxes) {
-    box.process();
+class PhysicsBox extends GrabBox {
+  constructor(x, y, z) {
+    super(x, y, z, CRATE_SIZE, CRATE_SIZE, CRATE_SIZE, "white");
+
+    this.dX = 0;
+    this.dY = 0;
+    this.dZ = 0;
+  }
+
+  process() {
+    super.process();
+
+    if (!this.isGrabbed) {
+      this.dY += GRAVITY * (deltaTime / DELTA_RATIO);
+
+      this.dY = collide1D(this.y, this.dY, 0, 10);
+
+      this.x += this.dX;
+      this.y += this.dY;
+      this.z += this.dZ;
+    }
+    else {
+      this.dX = 0;
+      this.dY = 0;
+      this.dZ = 0;
+    }
+
   }
 }
 
@@ -190,5 +219,11 @@ class ButtonBox extends StaticBox {
       this.value = !this.value;
       this.outTo.signal(this.value);
     }
+  }
+}
+
+function updateBoxes() {
+  for (let box of boxes) {
+    box.process();
   }
 }
