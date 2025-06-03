@@ -8,6 +8,10 @@
 // additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/staticbody.js
 // https://github.com/camelCaseSensitive/p5-raycast
 
+// TODO: Rework the Collide1D logic to instead just return true if you pass a barrier. It is promising for some stuff, but not how I used it
+// FIXME: Make player able to walk normally again. Stop trying to make a hyper-general solution to a hyper-specific problem (Y physics)
+// FIXME: Only grab one object at a time
+
 const DELTA_RATIO = 1000;
 
 let sensitivity = 0.1;

@@ -27,7 +27,6 @@ class StaticBox {
   // processing functions
   process() {
     this.draw();
-    this.drawDebug();
   }
 
   draw() {
@@ -38,6 +37,8 @@ class StaticBox {
     scale(this.sx, this.sy, this.sz);
     box(1);
     pop();
+
+    this.drawDebug();
   }
 
   drawDebug() {
@@ -173,7 +174,18 @@ class PhysicsBox extends GrabBox {
     if (!this.isGrabbed) {
       this.dY += GRAVITY * (deltaTime / DELTA_RATIO);
 
-      this.dY = collide1D(this.y, this.dY, 0, 10);
+      for (let boxID = 0; boxID < boxes.length -1; boxID++) {
+        // don't iterate over self
+        if (boxID === boxes.indexOf(this)) {
+          continue;
+        }
+        let box = boxes[boxID];
+      
+        if (box.isOverlappingBox(this.x, this.y + this.dY, this.z, this.sx, this.sy, this.sz)) {
+          this.y = box.y-box.sy/2-this.sy/2;
+          this.dY = 0;
+        }
+      }
 
       this.x += this.dX;
       this.y += this.dY;
@@ -183,6 +195,9 @@ class PhysicsBox extends GrabBox {
       this.dX = 0;
       this.dY = 0;
       this.dZ = 0;
+
+      //this.dX = player.dX;
+      //this.dZ = player.dZ;
     }
 
   }
@@ -225,5 +240,20 @@ class ButtonBox extends StaticBox {
 function updateBoxes() {
   for (let box of boxes) {
     box.process();
+  }
+}
+
+class SignalSplitter {
+  constructor(outTo = []) {
+    this.outTo = outTo;
+  }
+
+  signal(value) {
+    for (let item of outTo) {
+      if (typeof item.signal === "function") {
+        item.signal(item.value);
+      }
+    }
+    }
   }
 }
