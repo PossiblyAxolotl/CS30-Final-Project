@@ -138,6 +138,12 @@ class Player {
       FAR_PLANE
     );
   }
+
+  interactWithEnvironment() {
+    if (buttonInteract()) {
+      
+    }
+  }
 }
 
 // Modified from interactive scene project

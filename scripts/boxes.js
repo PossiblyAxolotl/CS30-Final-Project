@@ -103,52 +103,52 @@ class GrabBox extends StaticBox {
   
   // processing functions
   process() {
-    if (!this.isGrabbed) {
-      if (raycast(100, [this.x, this.y, this.z], 80) && buttonInteract()) {
-        this.isGrabbed = true;
-        this.doCollide = false;
-      }
+    if (this.isGrabbed) {
+      this.grabbedProcess();
     }
     else {
-      let positionVec = player.lookVec.copy();
-      positionVec.mult(100);
-      
-      let lx = lerp(this.x, player.x + positionVec.x, CRATE_LERP);
-      let ly = lerp(this.y, player.y + positionVec.y, CRATE_LERP);
-      let lz = lerp(this.z, player.z + positionVec.z, CRATE_LERP);
-
-      let doesOverlap = false;
-      
-      for (let boxID = 0; boxID < boxes.length -1; boxID++) {
-        if (boxID === boxes.indexOf(this)) {
-          continue;
-        }
-        let box = boxes[boxID];
-        if (box.isOverlappingBox(player.x + positionVec.x, player.y + positionVec.y, player.z + positionVec.z, this.sx, this.sy, this.sz)) {
-          doesOverlap = true;
-        }
-      }
-
-      if (buttonInteract() && !this.isOverlappingPlayer(player.x, player.y, player.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2)) {
-        this.isGrabbed = false;
-        this.doCollide = true;
-      }
-      if (!doesOverlap) {
-        this.x = lx;
-        this.y = ly;
-        this.z = lz;
-      }
+      this.ungrabbedProcess();
     }
 
     this.draw();
   }
 
   ungrabbedProcess() {
-
+    if (raycast(100, [this.x, this.y, this.z], 80) && buttonInteract()) {
+      this.isGrabbed = true;
+      this.doCollide = false;
+    }
   }
 
   grabbedProcess() {
+    let positionVec = player.lookVec.copy();
+    positionVec.mult(100);
+    
+    let lx = lerp(this.x, player.x + positionVec.x, CRATE_LERP);
+    let ly = lerp(this.y, player.y + positionVec.y, CRATE_LERP);
+    let lz = lerp(this.z, player.z + positionVec.z, CRATE_LERP);
 
+    let doesOverlap = false;
+    
+    for (let boxID = 0; boxID < boxes.length -1; boxID++) {
+      if (boxID === boxes.indexOf(this)) {
+        continue;
+      }
+      let box = boxes[boxID];
+      if (box.isOverlappingBox(player.x + positionVec.x, player.y + positionVec.y, player.z + positionVec.z, this.sx, this.sy, this.sz)) {
+        doesOverlap = true;
+      }
+    }
+
+    if (buttonInteract() && !this.isOverlappingPlayer(player.x, player.y, player.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2)) {
+      this.isGrabbed = false;
+      this.doCollide = true;
+    }
+    if (!doesOverlap) {
+      this.x = lx;
+      this.y = ly;
+      this.z = lz;
+    }
   }
 
   // receive signals from other boxes to reset position
@@ -168,48 +168,60 @@ class PhysicsBox extends GrabBox {
     this.dZ = 0;
   }
 
-  process() {
-    super.process();
+  grabbedProcess() {
+    this.dX = 0;
+    this.dY = 0;
+    this.dZ = 0;
 
-    if (!this.isGrabbed) {
-      this.dY += GRAVITY * (deltaTime / DELTA_RATIO);
+    super.grabbedProcess();
+  }
 
-      for (let boxID = 0; boxID < boxes.length -1; boxID++) {
-        // don't iterate over self
-        if (boxID === boxes.indexOf(this)) {
-          continue;
-        }
-        let box = boxes[boxID];
-      
-        if (box.isOverlappingBox(this.x, this.y + this.dY, this.z, this.sx, this.sy, this.sz)) {
-          this.y = box.y-box.sy/2-this.sy/2;
-          this.dY = 0;
-        }
+  ungrabbedProcess() {
+    this.dY += GRAVITY * (deltaTime / DELTA_RATIO);
+
+    for (let boxID = 0; boxID < boxes.length -1; boxID++) {
+      // don't iterate over self
+      if (boxID === boxes.indexOf(this)) {
+        continue;
       }
-
-      this.x += this.dX;
-      this.y += this.dY;
-      this.z += this.dZ;
-    }
-    else {
-      this.dX = 0;
-      this.dY = 0;
-      this.dZ = 0;
-
-      //this.dX = player.dX;
-      //this.dZ = player.dZ;
+      let box = boxes[boxID];
+    
+      if (box.isOverlappingBox(this.x, this.y + this.dY, this.z, this.sx, this.sy, this.sz)) {
+        this.y = box.y-box.sy/2-this.sy/2;
+        this.dY = 0;
+      }
     }
 
+    this.x += this.dX;
+    this.y += this.dY;
+    this.z += this.dZ;
+
+    super.ungrabbedProcess();
   }
 }
 
-class ButtonBox extends StaticBox {
+class BaseButtonBox extends StaticBox {
+  constructor(x, y, z, sx, sy, sz, outTo) {
+    super(x, y, z, sx, sy, sz, "red");
+
+    this.outTo = outTo;
+    this.value = false;
+  }
+
+  pressed() {
+    // ensure it has the method
+    if (typeof this.outTo.signal === "function") {
+      this.value = !this.value;
+      this.outTo.signal(this.value);
+    }
+  }
+}
+
+class ButtonBox extends BaseButtonBox {
   constructor(x, y, z, outTo, stayFor) {
-    super(x, y + BUTTON_Y_OFFSET, z, BUTTON_H_SIZE, -BUTTON_Y_OFFSET, BUTTON_H_SIZE, "red");
+    super(x, y + BUTTON_Y_OFFSET, z, BUTTON_H_SIZE, -BUTTON_Y_OFFSET, BUTTON_H_SIZE, outTo);
 
     this.stayFor = stayFor; // Undefined = toggle, 0 = permanent, +int = timer
-    this.outTo = outTo; // object to activate when pressed
-    this.value = false;
   }
 
   // processing functions
@@ -226,14 +238,32 @@ class ButtonBox extends StaticBox {
 
     this.draw();
   }
+}
 
-  // called when button is pressed & selected w/ raycast
-  pressed() {
-    // ensure it has the method
-    if (typeof this.outTo.signal === "function") {
-      this.value = !this.value;
-      this.outTo.signal(this.value);
+class FloorButtonBox extends BaseButtonBox {
+  constructor(x, y, z, outTo) {
+    super(x, y, z, 50, 50, 50, outTo);
+
+    this.doCollide = false;
+  }
+
+  process() {
+    let pressed = false;
+    for (let box of boxes) {
+      if (box instanceof GrabBox && this.isOverlappingBox(box.x, box.y, box.z, box.sx, box.sy, box.sz)) {
+        pressed = true;
+      }
     }
+
+    if (this.isOverlappingPlayer(player.x, player.y, player.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH)) {
+      pressed = true;
+    }
+
+    if (this.value !== pressed) {
+      this.pressed();
+    }
+
+    this.draw();
   }
 }
 
@@ -249,11 +279,10 @@ class SignalSplitter {
   }
 
   signal(value) {
-    for (let item of outTo) {
+    for (let item of this.outTo) {
       if (typeof item.signal === "function") {
-        item.signal(item.value);
+        item.signal(value);
       }
-    }
     }
   }
 }

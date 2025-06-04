@@ -11,6 +11,7 @@
 // TODO: Rework the Collide1D logic to instead just return true if you pass a barrier. It is promising for some stuff, but not how I used it
 // FIXME: Make player able to walk normally again. Stop trying to make a hyper-general solution to a hyper-specific problem (Y physics)
 // FIXME: Only grab one object at a time
+// Dist() is the hypotenuse
 
 const DELTA_RATIO = 1000;
 
@@ -36,9 +37,13 @@ new StaticBox(0, -180, 0, 75, 50, 75);
 
 let b = new GrabBox(0,0,0);
 
-new ButtonBox(-100, 20, 0, b);
-
 let bb = new PhysicsBox(20, -1200, 20);
+
+let ss = new SignalSplitter([b, bb]);
+
+new ButtonBox(-100, 20, 0, ss);
+
+new FloorButtonBox(-500, -100, -300, floor);
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
