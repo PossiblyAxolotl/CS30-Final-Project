@@ -8,6 +8,7 @@ const PLAYER_WIDTH    = 30;
 const PLAYER_HEIGHT   = 100;
 const PLAYER_FOREHEAD = 20; // additional height over camera for collision
 
+// min and max angle for player to look at
 const NECK_MIN_ANGLE = -179;
 const NECK_MAX_ANGLE = -1;
 
@@ -105,18 +106,34 @@ class Player {
   // use this still https://editor.p5js.org/3802203/sketches/MlKfVV2X8
   moveAndCollide(boxes) {
     for (let box of boxes) {
-      let overlapBeforeMove = box.isOverlappingPlayer(this.x, this.y, this.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
-      let overlapAfterMove = box.isOverlappingPlayer(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
+      // miraculously, by remaking it in such a way that it again processes every axis individually, the code started to work again.
+      let overlapAfterMoveX = box.isOverlappingPlayer(this.x + this.dX, this.y, this.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
+      let overlapAfterMoveZ = box.isOverlappingPlayer(this.x, this.y, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
       
-      if (overlapAfterMove && box.isColliding()) {
+      if (overlapAfterMoveX && box.isColliding()) {
         this.dX = 0;
-        this.dY = 0;
-        this.dZ = 0;
+      }
 
+      if (overlapAfterMoveZ && box.isColliding()) {
+        this.dZ = 0;
+      }
+
+      // Y stuff
+      let overlapAfterMove = box.isOverlappingPlayer(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
+
+      if (overlapAfterMove && box.isColliding()) {
         this.onFloor = true;
+
+        // snap to ground level
+        if (this.dY > 0) {
+          this.y = box.y - box.sy/2 - PLAYER_HEIGHT;
+        }
+
+        this.dY = 0;
       }
     }
 
+    // move by velocity
     this.x += this.dX;
     this.y += this.dY;
     this.z += this.dZ;
@@ -141,21 +158,14 @@ class Player {
 
   interactWithEnvironment() {
     if (buttonInteract()) {
-      
+      for (let box of boxes) {
+        if (box instanceof ButtonBox) {
+          // pushbutton
+        }
+        else if (box instanceof GrabBox) {
+          // grabbox
+        }
+      }
     }
   }
-}
-
-// Modified from interactive scene project
-function collide1D(position, velocity, barrier, end = null, downReach = 0, upReach = 0) {
-  // before -> after
-  if (velocity > 0 && position + downReach <= barrier) {
-    return position + velocity + downReach > barrier ? barrier - position - downReach : velocity;
-  } 
-  // after -> before
-  else if (end !== null && velocity < 0 && position >= end) {
-    return position + velocity - upReach < end ? end - position + upReach : velocity; 
-  }
-  
-  return velocity;
 }

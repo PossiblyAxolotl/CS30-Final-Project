@@ -200,6 +200,7 @@ class PhysicsBox extends GrabBox {
   }
 }
 
+// Button base, used for all button types
 class BaseButtonBox extends StaticBox {
   constructor(x, y, z, sx, sy, sz, outTo) {
     super(x, y, z, sx, sy, sz, "red");
@@ -217,6 +218,7 @@ class BaseButtonBox extends StaticBox {
   }
 }
 
+// active when the player presses E on it
 class ButtonBox extends BaseButtonBox {
   constructor(x, y, z, outTo, stayFor) {
     super(x, y + BUTTON_Y_OFFSET, z, BUTTON_H_SIZE, -BUTTON_Y_OFFSET, BUTTON_H_SIZE, outTo);
@@ -240,6 +242,7 @@ class ButtonBox extends BaseButtonBox {
   }
 }
 
+// active when a box or player is touching
 class FloorButtonBox extends BaseButtonBox {
   constructor(x, y, z, outTo) {
     super(x, y, z, 50, 50, 50, outTo);
@@ -249,6 +252,8 @@ class FloorButtonBox extends BaseButtonBox {
 
   process() {
     let pressed = false;
+
+    // if either a box or the player is touching, stay on
     for (let box of boxes) {
       if (box instanceof GrabBox && this.isOverlappingBox(box.x, box.y, box.z, box.sx, box.sy, box.sz)) {
         pressed = true;
@@ -259,6 +264,7 @@ class FloorButtonBox extends BaseButtonBox {
       pressed = true;
     }
 
+    // if the pressed value has changed since the last frame
     if (this.value !== pressed) {
       this.pressed();
     }
@@ -270,19 +276,5 @@ class FloorButtonBox extends BaseButtonBox {
 function updateBoxes() {
   for (let box of boxes) {
     box.process();
-  }
-}
-
-class SignalSplitter {
-  constructor(outTo = []) {
-    this.outTo = outTo;
-  }
-
-  signal(value) {
-    for (let item of this.outTo) {
-      if (typeof item.signal === "function") {
-        item.signal(value);
-      }
-    }
   }
 }

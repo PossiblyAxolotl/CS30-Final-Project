@@ -4,14 +4,14 @@
 A simplistic first-person puzzle game, reminiscent of the likes of [Antichamber](https://store.steampowered.com/app/219890/Antichamber/) and [Manifold Garden](https://williamchyr.itch.io/manifoldgarden)
 
 ## Needs To Have
-* First person controller / movement
+* First person controller / movement ✅
 * Object interaction
-    * Pick up / put down
-    * Push buttons
+    * Pick up / put down -- needs to only do one at a time
+    * Push buttons ✅
 * Objects to interact with
-    * Cube (grab & place)
-    * Cube button
-    * Push-button (press E to interact)
+    * Cube (grab & place) ✅
+    * Cube button ✅
+    * Push-button (press E to interact) ✅
 * Enterance and exit
 * Doors (open & close with specific buttons)
 * Load levels from file 

@@ -8,10 +8,7 @@
 // additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/staticbody.js
 // https://github.com/camelCaseSensitive/p5-raycast
 
-// TODO: Rework the Collide1D logic to instead just return true if you pass a barrier. It is promising for some stuff, but not how I used it
-// FIXME: Make player able to walk normally again. Stop trying to make a hyper-general solution to a hyper-specific problem (Y physics)
 // FIXME: Only grab one object at a time
-// Dist() is the hypotenuse
 
 const DELTA_RATIO = 1000;
 
@@ -23,6 +20,7 @@ let aspectRatio, cameraFOV; // defined using screen width and height in setup()
 const NEAR_PLANE = 0.01;
 const FAR_PLANE  = 5 * 800;
 
+// FOV goes up when running, multiplied by fovFactor
 let fovFactor = 0;
 const DEFAULT_FOVFAC = 1;
 const RUN_FOVFAC     = 1.2;
@@ -35,6 +33,10 @@ new StaticBox(-550, 100, 550, 200, 100, 200);
 new StaticBox(200, -100, -100, 100, 100, 100);
 new StaticBox(0, -180, 0, 75, 50, 75);
 
+// walls
+new StaticBox(-400, 0, -400, 100, 100, 10);
+new StaticBox(-400, 0, -400, 10, 100, 100);
+
 let b = new GrabBox(0,0,0);
 
 let bb = new PhysicsBox(20, -1200, 20);
@@ -44,6 +46,13 @@ let ss = new SignalSplitter([b, bb]);
 new ButtonBox(-100, 20, 0, ss);
 
 new FloorButtonBox(-500, -100, -300, floor);
+
+// xml test
+let myXML;
+
+function preload() {
+  myXML = loadXML("/levels/test.xml", loadLevelFromXML);
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
