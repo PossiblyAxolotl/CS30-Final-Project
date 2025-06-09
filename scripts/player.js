@@ -126,8 +126,8 @@ class Player {
         this.onFloor = true;
 
         // snap to ground level
-        if (this.dY > 0) {
-          this.y = box.y - box.sy/2 - PLAYER_HEIGHT;
+        if (this.dY >= 0) {
+          this.y = box.y - box.sy/2 - PLAYER_HEIGHT - 0.1;
         }
 
         this.dY = 0;

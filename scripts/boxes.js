@@ -31,7 +31,12 @@ class StaticBox {
   }
 
   draw() {
-    fill(this.color);
+    if (this.doCollide) {
+      fill(this.color);
+    }
+    else {
+      noFill();
+    }
 
     push();
     translate(this.x, this.y, this.z);
@@ -154,7 +159,7 @@ class GrabBox extends StaticBox {
   // run by the player when they press interact
   checkForGrab() {
     // if the player is looking at this, grab it and tell the player it's grabbed
-    if (raycast(100, [this.x, this.y, this.z], 80)) {
+    if (raycast(100, [this.x, this.y, this.z], 60)) {
       this.isGrabbed = true;
       this.doCollide = false;
       return true;
@@ -185,6 +190,7 @@ class PhysicsBox extends GrabBox {
 
     // define additional param for gravity
     this.dY = 0;
+    this.belowBox;
   }
 
   grabbedProcess() {
@@ -206,8 +212,13 @@ class PhysicsBox extends GrabBox {
     
       // collide with ground
       if (box.isOverlappingBox(this.x, this.y + this.dY, this.z, this.sx, this.sy, this.sz)) {
-        this.y = box.y-box.sy/2-this.sy/2;
-        this.dY = 0;
+        // player isn't holding this
+        if (box !== player.grabbedObject) {
+          this.belowBox = box;
+          this.y = box.y-box.sy/2-this.sy/2 - 0.1;
+          this.dY = 0;
+        }
+
       }
     }
 
@@ -296,6 +307,16 @@ class FloorButtonBox extends BaseButtonBox {
     }
 
     this.draw();
+  }
+}
+
+class Door extends StaticBox {
+  constructor(x, y, z, sx, sy, sz) {
+    super(x, y, z, sx, sy, sz, "blue");
+  }
+
+  signal(value) {
+    this.doCollide = value;
   }
 }
 

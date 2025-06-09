@@ -7,9 +7,14 @@
   <staticbox position="0,-180,0" size="75,50,75" />
   <staticbox position="-400,0,-400" size="100,100,10" />
   <staticbox position="-400,0,-400" size="10,100,100" />
+  <door position="0,0,-400" size="20,20,20" name="door" />
   <grabbox position="0,0,0" name="aBox" />
+  <grabbox position="0,0,50" name="aBox" />
   <gravbox position="20,-1200,20" name="bBox" />
+  <gravbox position="20,-1600,20" name="bBox" />
   <splitter name="split">aBox,bBox</splitter>
   <pushbutton position="-100, 20, 0">split</pushbutton>
+  <pushbutton position="100, 20, 100">door</pushbutton>
   <stepbutton position="-500,-100,-300">floor</stepbutton>
+  <exit>/levels/test.xml</exit>
 </scene>

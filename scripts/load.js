@@ -22,7 +22,6 @@ function spawnBoxesIteratively(array, object, memory) {
     }
     // if it has targets, find them and spawn it with them
     else if (item.getContent("none") !== "none") {
-      console.log(memory.get(item.getContent()));
       spawnedItem = new object(position[0], position[1], position[2], memory.get(item.getContent()));
     }
     // it's just a boring old physics object with no target or size
@@ -64,9 +63,16 @@ function spawnPlayer(data) {
 function loadLevelFromXML(data) {
   // store objects by name for future reference
   let memory = new Map();
+  clearBoxes();
+
+  let nextLevel = data.getChild("exit").getContent();
+  let exit = new Exit(nextLevel);
+
+  memory.set("exit", exit);
 
   // get each individual box
   let staticboxes = data.getChildren("staticbox");
+  let doors = data.getChildren("door");
   let grabboxes = data.getChildren("grabbox");
   let gravboxes = data.getChildren("gravbox");
   let splitters = data.getChildren("splitter");
@@ -75,6 +81,7 @@ function loadLevelFromXML(data) {
 
   // spawn objects that typically recieve a signal
   spawnBoxesIteratively(staticboxes, StaticBox, memory);
+  spawnBoxesIteratively(doors, Door, memory);
   spawnBoxesIteratively(grabboxes, GrabBox, memory);
   spawnBoxesIteratively(gravboxes, PhysicsBox, memory);
 
@@ -86,5 +93,5 @@ function loadLevelFromXML(data) {
   spawnBoxesIteratively(stepbuttons, FloorButtonBox, memory);
 
   // spawn player last
-  spawnPlayer(data)
+  spawnPlayer(data);
 }
