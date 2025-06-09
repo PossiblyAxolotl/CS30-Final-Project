@@ -11,8 +11,6 @@
 // additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/boxes.js, ./scripts/load.js, ./scripts/logic.js
 // https://github.com/camelCaseSensitive/p5-raycast
 
-// FIXME: Only grab one object at a time
-
 const DELTA_RATIO = 1000;
 
 let sensitivity = 0.1;
