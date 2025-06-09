@@ -4,6 +4,9 @@
 //
 // Extra for Experts:
 // - XML level loading with weird object function stuff
+// - 3D with webgl
+// - Complex math -- arrow functions in mathadditions.js
+// - Lots of OOP and inheritance in boxes especially
 
 // additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/boxes.js, ./scripts/load.js, ./scripts/logic.js
 // https://github.com/camelCaseSensitive/p5-raycast
