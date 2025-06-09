@@ -21,6 +21,7 @@ class StaticBox {
 
     this.doCollide = true;
 
+    // I can just call 'new StaticBox()' and have it generated
     boxes.push(this);
   }
 
@@ -94,11 +95,14 @@ class GrabBox extends StaticBox {
   constructor(x, y, z) {
     super(x, y, z, CRATE_SIZE, CRATE_SIZE, CRATE_SIZE, "white");
 
+    // allow respawning if it gets a signal
     this.spawnX = x;
     this.spawnY = y;
     this.spawnZ = z;
 
     this.isGrabbed = false;
+
+    this.color = "gray";
   }
   
   // processing functions
@@ -113,12 +117,8 @@ class GrabBox extends StaticBox {
     this.draw();
   }
 
-  ungrabbedProcess() {
-    if (raycast(100, [this.x, this.y, this.z], 80) && buttonInteract()) {
-      this.isGrabbed = true;
-      this.doCollide = false;
-    }
-  }
+  // unused in this specific object
+  ungrabbedProcess() {}
 
   grabbedProcess() {
     let positionVec = player.lookVec.copy();
@@ -130,24 +130,44 @@ class GrabBox extends StaticBox {
 
     let doesOverlap = false;
     
+    // check if it overlaps with any other box when it next moves
     for (let boxID = 0; boxID < boxes.length -1; boxID++) {
+      // skip self
       if (boxID === boxes.indexOf(this)) {
         continue;
       }
+
       let box = boxes[boxID];
       if (box.isOverlappingBox(player.x + positionVec.x, player.y + positionVec.y, player.z + positionVec.z, this.sx, this.sy, this.sz)) {
         doesOverlap = true;
       }
     }
 
-    if (buttonInteract() && !this.isOverlappingPlayer(player.x, player.y, player.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2)) {
-      this.isGrabbed = false;
-      this.doCollide = true;
-    }
+    // if it doesn't overlap, move
     if (!doesOverlap) {
       this.x = lx;
       this.y = ly;
       this.z = lz;
+    }
+  }
+
+  // run by the player when they press interact
+  checkForGrab() {
+    // if the player is looking at this, grab it and tell the player it's grabbed
+    if (raycast(100, [this.x, this.y, this.z], 80)) {
+      this.isGrabbed = true;
+      this.doCollide = false;
+      return true;
+    }
+    return false;
+  }
+
+  attemptRelease() {
+    // ensure the player isn't inside the box, and drop if it's safe
+    if (!this.isOverlappingPlayer(player.x, player.y, player.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2)) {
+      this.isGrabbed = false;
+      this.doCollide = true;
+      player.grabbedObject = null;
     }
   }
 
@@ -163,15 +183,12 @@ class PhysicsBox extends GrabBox {
   constructor(x, y, z) {
     super(x, y, z, CRATE_SIZE, CRATE_SIZE, CRATE_SIZE, "white");
 
-    this.dX = 0;
+    // define additional param for gravity
     this.dY = 0;
-    this.dZ = 0;
   }
 
   grabbedProcess() {
-    this.dX = 0;
     this.dY = 0;
-    this.dZ = 0;
 
     super.grabbedProcess();
   }
@@ -184,19 +201,18 @@ class PhysicsBox extends GrabBox {
       if (boxID === boxes.indexOf(this)) {
         continue;
       }
+
       let box = boxes[boxID];
     
+      // collide with ground
       if (box.isOverlappingBox(this.x, this.y + this.dY, this.z, this.sx, this.sy, this.sz)) {
         this.y = box.y-box.sy/2-this.sy/2;
         this.dY = 0;
       }
     }
 
-    this.x += this.dX;
+    // apply gravity
     this.y += this.dY;
-    this.z += this.dZ;
-
-    super.ungrabbedProcess();
   }
 }
 
@@ -228,17 +244,24 @@ class ButtonBox extends BaseButtonBox {
 
   // processing functions
   process() {
+    // change to green if player can interact
     if (raycast(BUTTON_RAY_LENGTH, [this.x, this.y, this.z], BUTTON_RAY_AREA)) {
       this.color = "green";
-      if (buttonInteract()) {
-        this.pressed();
-      }
     }
     else {
       this.color = "red";
     }
 
     this.draw();
+  }
+
+  checkForPress() {
+    // run by player, make sure the player is actually looking directly at it before pressing and report back
+    if (raycast(BUTTON_RAY_LENGTH, [this.x, this.y, this.z], BUTTON_RAY_AREA)) {
+      this.pressed();
+      return true;
+    }
+    return false;
   }
 }
 
@@ -252,16 +275,19 @@ class FloorButtonBox extends BaseButtonBox {
 
   process() {
     let pressed = false;
+    this.color = "red";
 
     // if either a box or the player is touching, stay on
     for (let box of boxes) {
       if (box instanceof GrabBox && this.isOverlappingBox(box.x, box.y, box.z, box.sx, box.sy, box.sz)) {
         pressed = true;
+        this.color = "green";
       }
     }
 
     if (this.isOverlappingPlayer(player.x, player.y, player.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH)) {
       pressed = true;
+      this.color = "green";
     }
 
     // if the pressed value has changed since the last frame
@@ -277,4 +303,8 @@ function updateBoxes() {
   for (let box of boxes) {
     box.process();
   }
+}
+
+function clearBoxes() {
+  boxes = [];
 }

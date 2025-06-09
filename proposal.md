@@ -5,18 +5,18 @@ A simplistic first-person puzzle game, reminiscent of the likes of [Antichamber]
 
 ## Needs To Have
 * First person controller / movement ✅
-* Object interaction
-    * Pick up / put down -- needs to only do one at a time
+* Object interaction ✅
+    * Pick up / put down -- needs to only do one at a time ✅
     * Push buttons ✅
 * Objects to interact with
     * Cube (grab & place) ✅
     * Cube button ✅
     * Push-button (press E to interact) ✅
-* Enterance and exit
-* Doors (open & close with specific buttons)
+* Enterance ✅ and exit ❌
+* Doors (open & close with specific buttons)❌
 * Load levels from file ✅
-    * 3 total (1 tutorial, 1 larger introduction to elements, 1 "final test")
-* Background music & sfx
+    * 3 total (1 tutorial, 1 larger introduction to elements, 1 "final test") ❌
+* Background music & sfx ❌
 
 ## Nice To Have
 * Simple level editor

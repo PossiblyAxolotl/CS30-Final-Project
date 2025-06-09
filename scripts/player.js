@@ -40,6 +40,7 @@ class Player {
     this.lookAround();
     this.move();
     this.displayCamera();
+    this.interactWithEnvironment();
   }
 
   lookAround() {
@@ -158,13 +159,19 @@ class Player {
 
   interactWithEnvironment() {
     if (buttonInteract()) {
-      for (let box of boxes) {
-        if (box instanceof ButtonBox) {
-          // pushbutton
+      if (this.grabbedObject === null) {
+        for (let box of boxes) {
+          if (box instanceof ButtonBox && box.checkForPress()) {
+            break;
+          }
+          else if (box instanceof GrabBox && box.checkForGrab()) {
+            this.grabbedObject = box;
+            break;
+          }
         }
-        else if (box instanceof GrabBox) {
-          // grabbox
-        }
+      }
+      else {
+        this.grabbedObject.attemptRelease();
       }
     }
   }

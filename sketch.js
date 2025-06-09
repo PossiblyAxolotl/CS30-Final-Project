@@ -3,9 +3,9 @@
 // Date
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - XML level loading with weird object function stuff
 
-// additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/staticbody.js
+// additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/boxes.js, ./scripts/load.js, ./scripts/logic.js
 // https://github.com/camelCaseSensitive/p5-raycast
 
 // FIXME: Only grab one object at a time
