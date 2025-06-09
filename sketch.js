@@ -15,43 +15,24 @@ const DELTA_RATIO = 1000;
 let sensitivity = 0.1;
 
 // Camera
-let cam;
-let aspectRatio, cameraFOV; // defined using screen width and height in setup()
 const NEAR_PLANE = 0.01;
 const FAR_PLANE  = 5 * 800;
 
+let cam;
+let aspectRatio, cameraFOV; // defined using screen width and height in setup()
+
 // FOV goes up when running, multiplied by fovFactor
-let fovFactor = 0;
 const DEFAULT_FOVFAC = 1;
 const RUN_FOVFAC     = 1.2;
+const FOV_SIZE       = 800;
 
-let player = new Player(0, -800, 0);
+let fovFactor = 0;
 
-let floor = new StaticBox(0, 50, 0, 1000, 50, 1000);
-new StaticBox(550, 100, 550, 100, 100, 100);
-new StaticBox(-550, 100, 550, 200, 100, 200);
-new StaticBox(200, -100, -100, 100, 100, 100);
-new StaticBox(0, -180, 0, 75, 50, 75);
-
-// walls
-new StaticBox(-400, 0, -400, 100, 100, 10);
-new StaticBox(-400, 0, -400, 10, 100, 100);
-
-let b = new GrabBox(0,0,0);
-
-let bb = new PhysicsBox(20, -1200, 20);
-
-let ss = new SignalSplitter([b, bb]);
-
-new ButtonBox(-100, 20, 0, ss);
-
-new FloorButtonBox(-500, -100, -300, floor);
-
-// xml test
-let myXML;
+// other important
+let player;
 
 function preload() {
-  myXML = loadXML("/levels/test.xml", loadLevelFromXML);
+  loadXML("/levels/test.xml", loadLevelFromXML);
 }
 
 function setup() {
@@ -59,7 +40,7 @@ function setup() {
   frameRate(60);
 
   aspectRatio = width/height;
-  cameraFOV = 2 * atan(height / 2 / 800);
+  cameraFOV = 2 * atan(height / 2 / FOV_SIZE);
 
   cam = createCamera();
 

@@ -1,14 +1,14 @@
 <scene>
-  <player position="0,-800,0" rotation="0,0,0" />
+  <player position="0,-800,0" rotation="0,-90" />
   <staticbox position="0,50,0" size="1000,50,1000" name="floor" />
   <staticbox position="550,100,550" size="200,100,200" />
   <staticbox position="-550,100,550" size="200,100,200" />
   <staticbox position="200,-100,-100" size="100,100,100" />
   <staticbox position="0,-180,0" size="75,50,75" />
   <staticbox position="-400,0,-400" size="100,100,10" />
-  <staticbox position="-400,0,-400" size="100,10,100" />
+  <staticbox position="-400,0,-400" size="10,100,100" />
   <grabbox position="0,0,0" name="aBox" />
-  <gravbox position="0,0,0" name="bBox" />
+  <gravbox position="20,-1200,20" name="bBox" />
   <splitter name="split">aBox,bBox</splitter>
   <pushbutton position="-100, 20, 0">split</pushbutton>
   <stepbutton position="-500,-100,-300">floor</stepbutton>
