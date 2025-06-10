@@ -1,0 +1,7 @@
+<scene>
+    <player position="0,0,0" rotation="0,-90" />
+    <staticbox position="0,50,300" size="300,50,900" name="floor" />
+    <door position="0,0,700" size="900,900,10" name="wall" />
+    <pushbutton position="0,0,500">wall</pushbutton>
+    <exit>/levels/test.xml</exit>
+</scene>

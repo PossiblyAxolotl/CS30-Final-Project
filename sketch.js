@@ -32,8 +32,15 @@ let fovFactor = 0;
 // other important
 let player;
 
+// textures
+let texLook, texInteract, texMove;
+
 function preload() {
-  loadXML("/levels/test.xml", loadLevelFromXML);
+  texLook = loadImage("textures/look.png");
+  texInteract = loadImage("textures/interact.png");
+  texMove = loadImage("textures/move.png");
+
+  loadXML("levels/tutorial.xml", loadLevelFromXML);
 }
 
 function setup() {
@@ -67,8 +74,39 @@ function draw() {
   colorMode(RGB);
 
   updateBoxes();
+
+  if (player.y > 500) {
+    reloadLevel();
+  }
+
+  firstlevelTutorials();
 }
 
 function mouseClicked() {
   requestPointerLock();
+}
+
+function firstlevelTutorials() {
+  push();
+  translate(0, -80, -160);
+  texture(texLook);
+  noStroke();
+  plane(60);
+  pop();
+
+  push();
+  translate(-160, -80, 0);
+  rotateY(deg2rad(90));
+  texture(texMove);
+  noStroke();
+  plane(60);
+  pop();
+
+  push();
+  translate(160, -80, 0);
+  rotateY(deg2rad(-90));
+  texture(texInteract);
+  noStroke();
+  plane(60);
+  pop();
 }

@@ -52,7 +52,8 @@ class StaticBox {
 
     push();
     translate(closest.x, closest.y, closest.z);
-    sphere(2);
+    stroke(1);
+    sphere(1);
     pop();
   }
 
@@ -233,7 +234,7 @@ class BaseButtonBox extends StaticBox {
     super(x, y, z, sx, sy, sz, "red");
 
     this.outTo = outTo;
-    this.value = false;
+    this.value = outTo instanceof Door;
   }
 
   pressed() {
@@ -268,7 +269,7 @@ class ButtonBox extends BaseButtonBox {
 
   checkForPress() {
     // run by player, make sure the player is actually looking directly at it before pressing and report back
-    if (raycast(BUTTON_RAY_LENGTH, [this.x, this.y, this.z], BUTTON_RAY_AREA)) {
+    if (this.color === "green") {
       this.pressed();
       return true;
     }

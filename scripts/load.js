@@ -1,4 +1,6 @@
 // load XML
+let currentlevel;
+
 function getArrayFromXML(data, name) {
   return data.getString(name).split(",");
 }
@@ -48,7 +50,7 @@ function spawnSplittersIteratively(splitters, memory) {
   }
 }
 
-function spawnPlayer(data) {
+function spawnPlayer(data) {  
   // get player object
   let p = data.getChild("player");
   
@@ -61,6 +63,8 @@ function spawnPlayer(data) {
 }
 
 function loadLevelFromXML(data) {
+  currentlevel = data;
+
   // store objects by name for future reference
   let memory = new Map();
   clearBoxes();
@@ -94,4 +98,8 @@ function loadLevelFromXML(data) {
 
   // spawn player last
   spawnPlayer(data);
+}
+
+function reloadLevel() {
+  loadLevelFromXML(currentlevel);
 }
