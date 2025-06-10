@@ -8,7 +8,7 @@ class SignalSplitter extends SignalLogic {
   signal(value) {
     for (let item of this.outTo) {
       if (typeof item.signal === "function") {
-        item.signal(value);
+        item.signal(item instanceof Door ? !value : value);
       }
     }
   }

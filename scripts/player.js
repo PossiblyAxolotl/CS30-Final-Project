@@ -109,11 +109,12 @@ class Player {
     for (let box of boxes) {
       // miraculously, by remaking it in such a way that it again processes every axis individually, the code started to work again.
       let overlapAfterMoveX = box.isOverlappingPlayer(this.x + this.dX, this.y, this.z, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
-      let overlapAfterMoveZ = box.isOverlappingPlayer(this.x, this.y, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
       
       if (overlapAfterMoveX && box.isColliding()) {
         this.dX = 0;
       }
+
+      let overlapAfterMoveZ = box.isOverlappingPlayer(this.x + this.dX, this.y, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
 
       if (overlapAfterMoveZ && box.isColliding()) {
         this.dZ = 0;
