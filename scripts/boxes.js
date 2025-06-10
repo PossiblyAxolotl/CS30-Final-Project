@@ -57,10 +57,10 @@ class StaticBox {
     pop();
   }
 
+  // for some reason P5 requires me to make a sphere every time or it doesn't collide properly with the raycast
+  // I don't even know why
   drawDumbCircles() {
-    push();
-    sphere(1);
-    pop();
+    sphere(0.1);
   }
 
   // receive signals from other boxes
