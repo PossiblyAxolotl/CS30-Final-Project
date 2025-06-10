@@ -143,8 +143,8 @@ class GrabBox extends StaticBox {
     let doesOverlap = false;
     
     // check if it overlaps with any other box when it next moves
-    for (let boxID = 0; boxID < boxes.length -1; boxID++) {
-      // skip self
+    for (let boxID = 0; boxID < boxes.length; boxID++) {
+      // don't iterate over self
       if (boxID === boxes.indexOf(this)) {
         continue;
       }
@@ -166,7 +166,7 @@ class GrabBox extends StaticBox {
   // run by the player when they press interact
   checkForGrab() {
     // if the player is looking at this, grab it and tell the player it's grabbed
-    if (raycast(120, [this.x, this.y, this.z], 70)) {
+    if (raycast(125, [this.x, this.y, this.z], 70)) {
       this.isGrabbed = true;
       this.doCollide = false;
       return true;
@@ -208,7 +208,7 @@ class PhysicsBox extends GrabBox {
   ungrabbedProcess() {
     this.dY += GRAVITY * (deltaTime / DELTA_RATIO);
 
-    for (let boxID = 0; boxID < boxes.length -1; boxID++) {
+    for (let boxID = 0; boxID < boxes.length; boxID++) {
       // don't iterate over self
       if (boxID === boxes.indexOf(this)) {
         continue;
