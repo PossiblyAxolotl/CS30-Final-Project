@@ -44,15 +44,22 @@ class StaticBox {
     box(1);
     pop();
 
-    this.drawDebug();
+    this.drawDumbCircles();
   }
 
   drawDebug() {
     let closest = this.getClosest(player.x, player.y, player.z);
 
     push();
+    noFill();
     translate(closest.x, closest.y, closest.z);
     sphere(2);
+    pop();
+  }
+
+  drawDumbCircles() {
+    push();
+    sphere(1);
     pop();
   }
 
@@ -159,7 +166,7 @@ class GrabBox extends StaticBox {
   // run by the player when they press interact
   checkForGrab() {
     // if the player is looking at this, grab it and tell the player it's grabbed
-    if (raycast(100, [this.x, this.y, this.z], 65)) {
+    if (raycast(100, [this.x, this.y, this.z], 70)) {
       this.isGrabbed = true;
       this.doCollide = false;
       return true;
