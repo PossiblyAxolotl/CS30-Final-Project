@@ -52,8 +52,7 @@ class StaticBox {
 
     push();
     translate(closest.x, closest.y, closest.z);
-    stroke(1);
-    sphere(1);
+    sphere(2);
     pop();
   }
 
@@ -144,7 +143,7 @@ class GrabBox extends StaticBox {
       }
 
       let box = boxes[boxID];
-      if (box.isOverlappingBox(player.x + positionVec.x, player.y + positionVec.y, player.z + positionVec.z, this.sx, this.sy, this.sz)) {
+      if (box.isOverlappingBox(player.x + positionVec.x, player.y + positionVec.y, player.z + positionVec.z, this.sx, this.sy, this.sz) && box.doCollide) {
         doesOverlap = true;
       }
     }
@@ -160,7 +159,7 @@ class GrabBox extends StaticBox {
   // run by the player when they press interact
   checkForGrab() {
     // if the player is looking at this, grab it and tell the player it's grabbed
-    if (raycast(100, [this.x, this.y, this.z], 60)) {
+    if (raycast(100, [this.x, this.y, this.z], 65)) {
       this.isGrabbed = true;
       this.doCollide = false;
       return true;
@@ -191,7 +190,6 @@ class PhysicsBox extends GrabBox {
 
     // define additional param for gravity
     this.dY = 0;
-    this.belowBox;
   }
 
   grabbedProcess() {
@@ -214,8 +212,7 @@ class PhysicsBox extends GrabBox {
       // collide with ground
       if (box.isOverlappingBox(this.x, this.y + this.dY, this.z, this.sx, this.sy, this.sz)) {
         // player isn't holding this
-        if (box !== player.grabbedObject) {
-          this.belowBox = box;
+        if (box !== player.grabbedObject && box.doCollide) {
           this.y = box.y-box.sy/2-this.sy/2 - 0.1;
           this.dY = 0;
         }
@@ -234,14 +231,14 @@ class BaseButtonBox extends StaticBox {
     super(x, y, z, sx, sy, sz, "red");
 
     this.outTo = outTo;
-    this.value = outTo instanceof Door;
+    this.value = false;
   }
 
   pressed() {
     // ensure it has the method
     if (typeof this.outTo.signal === "function") {
       this.value = !this.value;
-      this.outTo.signal(this.value);
+      this.outTo.signal(this.outTo instanceof Door ? !this.value : this.value);
     }
   }
 }
@@ -269,7 +266,7 @@ class ButtonBox extends BaseButtonBox {
 
   checkForPress() {
     // run by player, make sure the player is actually looking directly at it before pressing and report back
-    if (this.color === "green") {
+    if (raycast(BUTTON_RAY_LENGTH, [this.x, this.y, this.z], BUTTON_RAY_AREA)) {
       this.pressed();
       return true;
     }

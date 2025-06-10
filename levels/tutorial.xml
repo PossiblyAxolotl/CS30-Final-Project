@@ -1,7 +1,11 @@
 <scene>
     <player position="0,0,0" rotation="0,-90" />
-    <staticbox position="0,50,300" size="300,50,900" name="floor" />
-    <door position="0,0,700" size="900,900,10" name="wall" />
+    <staticbox position="0,50,700" size="300,50,1500" name="floor" />
+    <door position="0,-80,700" size="500,200,10" name="wall" />
+    <door position="0,-80,1200" size="500,200,10" name="wall2" />
     <pushbutton position="0,0,500">wall</pushbutton>
+    <gravbox position="0,10,900" />
+    <stepbutton position="0,0,1100">wall2</stepbutton>
+    <stepbutton position="0,0,1400">exit</stepbutton>
     <exit>/levels/test.xml</exit>
 </scene>

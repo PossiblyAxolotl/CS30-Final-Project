@@ -33,12 +33,14 @@ let fovFactor = 0;
 let player;
 
 // textures
-let texLook, texInteract, texMove;
+let texLook, texInteract, texMove, texCursor;
+let cursor;
 
 function preload() {
   texLook = loadImage("textures/look.png");
   texInteract = loadImage("textures/interact.png");
   texMove = loadImage("textures/move.png");
+  texCursor = loadImage("textures/cursor.png");
 
   loadXML("levels/tutorial.xml", loadLevelFromXML);
 }
@@ -52,6 +54,27 @@ function setup() {
 
   cam = createCamera();
 
+  cursor = createImg("textures/look.png", "look with mouse");
+  cursor.position(width/2 - texLook.width/2, height/2 - texLook.height/2);
+
+  window.setTimeout(() => {
+    cursor.remove();
+    cursor = createImg("textures/move.png", "Move with wasd");
+    cursor.position(width/2 - texMove.width/2, height/2 - texMove.height/2);
+  }, 5000)
+
+  window.setTimeout(() => {
+    cursor.remove();
+    cursor = createImg("textures/interact.png", "interact w/ left click or E");
+    cursor.position(width/2 - texInteract.width/2, height/2 - texInteract.height/2);
+  }, 10000)
+
+  window.setTimeout(() => {
+    cursor.remove();
+    cursor = createImg("textures/cursor.png", "");
+    cursor.position(width/2 - texCursor.width/2, height/2 - texCursor.height/2);
+  }, 15000)
+
   //strokeWeight(2);
 }
 
@@ -60,53 +83,14 @@ function draw() {
 
   player.process();
 
-  push();
-  colorMode(HSB);
-  let c = color(millis()/100 % 255, 255 , 255);
-  fill(c);
-  translate(0,-25 + Math.sin(millis()/1000) * 7,200);
-  rotateX(millis()/1000);
-  rotateY(millis()/700);
-  //box(50);
-  torus(30, 15, 5, 3);
-  pop();
-
-  colorMode(RGB);
-
   updateBoxes();
 
   if (player.y > 500) {
     reloadLevel();
   }
 
-  firstlevelTutorials();
 }
 
 function mouseClicked() {
   requestPointerLock();
-}
-
-function firstlevelTutorials() {
-  push();
-  translate(0, -80, -160);
-  texture(texLook);
-  noStroke();
-  plane(60);
-  pop();
-
-  push();
-  translate(-160, -80, 0);
-  rotateY(deg2rad(90));
-  texture(texMove);
-  noStroke();
-  plane(60);
-  pop();
-
-  push();
-  translate(160, -80, 0);
-  rotateY(deg2rad(-90));
-  texture(texInteract);
-  noStroke();
-  plane(60);
-  pop();
 }
