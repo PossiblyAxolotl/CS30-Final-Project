@@ -166,7 +166,7 @@ class GrabBox extends StaticBox {
   // run by the player when they press interact
   checkForGrab() {
     // if the player is looking at this, grab it and tell the player it's grabbed
-    if (raycast(100, [this.x, this.y, this.z], 70)) {
+    if (raycast(120, [this.x, this.y, this.z], 70)) {
       this.isGrabbed = true;
       this.doCollide = false;
       return true;

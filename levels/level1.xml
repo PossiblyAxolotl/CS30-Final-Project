@@ -1,0 +1,8 @@
+<scene>
+  <player position="0,0,0" rotation="0,-90" />
+  <staticbox position="0,50,0" size="300,50,300" name="floor" />
+  <staticbox position="300,-30,0" size="300,50,300" name="floor2" />
+  <gravbox position="-100,0,0" />
+  <gravbox position="400,-80,0" />
+  <exit>a</exit>
+</scene>

@@ -30,6 +30,8 @@ const FOV_SIZE       = 800;
 let fovFactor = 0;
 
 // other important
+const FIRST_LEVEL = "levels/level1.xml";
+
 let player;
 
 // textures
@@ -42,7 +44,7 @@ function preload() {
   texMove = loadImage("textures/move.png");
   texCursor = loadImage("textures/cursor.png");
 
-  loadXML("levels/tutorial.xml", loadLevelFromXML);
+  loadXML(FIRST_LEVEL, loadLevelFromXML);
 }
 
 function setup() {
