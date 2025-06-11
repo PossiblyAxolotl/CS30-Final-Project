@@ -1,8 +1,17 @@
 <scene>
-  <player position="0,0,0" rotation="0,-90" />
+  <player position="0,0,0" rotation="-90,-90" />
   <staticbox position="0,50,0" size="300,50,300" name="floor" />
   <staticbox position="300,-30,0" size="300,50,300" name="floor2" />
+  <staticbox position="300,-160,300" size="300,50,300" name="floor3" />
+  <staticbox position="300,-190,-300" size="300,50,300" name="floor4" />
+  <door position="300,-365,-175" size="300,300,50" name="exitblock" />
+  <door position="300,-365,-425" size="300,300,50" name="exitblock2" />
   <gravbox position="-100,0,0" name="1" />
   <gravbox position="400,-80,0" name="2" />
-  <exit>a</exit>
+  <gravbox position="350,-240,350" name="3" />
+  <gravbox position="250,-240,350" name="3" />
+  <pushbutton position="300,-190,425">exitblock</pushbutton>
+  <stepbutton position="300,-240,-300">exitblock2</stepbutton>
+  <stepbutton position="300,-260,-500">exit</stepbutton>
+  <exit>levels/level2.xml</exit>
 </scene>

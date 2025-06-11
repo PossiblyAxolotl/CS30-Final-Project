@@ -30,7 +30,7 @@ const FOV_SIZE       = 800;
 let fovFactor = 0;
 
 // other important
-const FIRST_LEVEL = "levels/level1.xml";
+const FIRST_LEVEL = "levels/tutorial.xml";
 
 let player;
 
