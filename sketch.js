@@ -38,12 +38,23 @@ let player;
 let texLook, texInteract, texMove, texCursor;
 let cursor;
 
+// sounds
+let sndJump, sndLand, sndClick;
+
 function preload() {
+  // textures
   texLook = loadImage("textures/look.png");
   texInteract = loadImage("textures/interact.png");
   texMove = loadImage("textures/move.png");
   texCursor = loadImage("textures/cursor.png");
 
+  // sound
+  soundFormats("wav");
+  sndJump = loadSound("sound/jump")
+  sndLand = loadSound("sound/land")
+  sndClick = loadSound("sound/click")
+
+  // load first level
   loadXML(FIRST_LEVEL, loadLevelFromXML);
 }
 

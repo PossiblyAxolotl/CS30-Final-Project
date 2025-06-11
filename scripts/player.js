@@ -94,6 +94,7 @@ class Player {
     if (this.onFloor && buttonJump()) {
       this.dY = JUMP_HEIGHT;
       this.onFloor = false;
+      sndJump.play();
     }
   }
 
@@ -124,6 +125,11 @@ class Player {
       let overlapAfterMove = box.isOverlappingPlayer(this.x + this.dX, this.y + this.dY, this.z + this.dZ, PLAYER_HEIGHT, PLAYER_FOREHEAD, PLAYER_WIDTH/2);
 
       if (overlapAfterMove && box.isColliding()) {
+        // just landed
+        if (this.onFloor !== true) {
+          sndLand.play();
+        }
+
         this.onFloor = true;
 
         // snap to ground level
@@ -160,6 +166,7 @@ class Player {
 
   interactWithEnvironment() {
     if (buttonInteract()) {
+      sndClick.play();
       if (this.grabbedObject === null) {
         for (let box of boxes) {
           if (box instanceof ButtonBox && box.checkForPress()) {

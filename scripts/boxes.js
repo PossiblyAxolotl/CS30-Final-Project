@@ -220,6 +220,11 @@ class PhysicsBox extends GrabBox {
       if (box.isOverlappingBox(this.x, this.y + this.dY, this.z, this.sx, this.sy, this.sz)) {
         // player isn't holding this
         if (box !== player.grabbedObject && box.doCollide) {
+          // only possible if the object has fallen some actual height
+          if (this.dY > 1) {
+            sndLand.play();
+          }
+
           this.y = box.y-box.sy/2-this.sy/2 - 0.1;
           this.dY = 0;
         }
