@@ -17,4 +17,4 @@
 * Some minor collision problems mainly, the player gets stuck if they push into a corner rather than sliding to one side or the other and that couldn't be fixed on time
 * For some reason the raycast code does not work unless I create a sphere after making each box
   * At the end of each box draw call they call "this.drawDumbCircles();" which creates a sphere of size 0.1 at {0, 0, 0} which is required, otherwise the rays don't collide properly and I have no clue why
-  * comment line 47 or 53 to see in action
+  * comment line 47 or 53 of boxes.js to see in action
