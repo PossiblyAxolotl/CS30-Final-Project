@@ -11,6 +11,8 @@
 // additional files: ./scripts/input.js, ./scripts/mathadditions.js, ./scripts/player.js, ./scripts/boxes.js, ./scripts/load.js, ./scripts/logic.js
 // https://github.com/camelCaseSensitive/p5-raycast
 
+// Music from: https://freemusicarchive.org/music/Rolemusic/The_Black_Dot
+
 const DELTA_RATIO = 1000;
 
 let sensitivity = 0.1;
@@ -40,6 +42,7 @@ let cursor;
 
 // sounds
 let sndJump, sndLand, sndClick;
+let bgm;
 
 function preload() {
   // textures
@@ -49,10 +52,12 @@ function preload() {
   texCursor = loadImage("textures/cursor.png");
 
   // sound
-  soundFormats("wav");
-  sndJump = loadSound("sound/jump")
-  sndLand = loadSound("sound/land")
-  sndClick = loadSound("sound/click")
+  soundFormats("wav", "mp3");
+  sndJump = loadSound("sound/jump");
+  sndLand = loadSound("sound/land");
+  sndClick = loadSound("sound/click");
+  
+  bgm = loadSound("sound/thewhitekitty.mp3");
 
   // load first level
   loadXML(FIRST_LEVEL, loadLevelFromXML);
@@ -62,14 +67,21 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   frameRate(60);
 
+  // start music
+  bgm.loop();
+  bgm.setVolume(0.35);
+
+  // camera params
   aspectRatio = width/height;
   cameraFOV = 2 * atan(height / 2 / FOV_SIZE);
 
   cam = createCamera();
 
+  // show tutorial text
   cursor = createImg("textures/look.png", "look with mouse");
   cursor.position(width/2 - texLook.width/2, height/2 - texLook.height/2);
 
+  // change tutorial text and change to cursor later
   window.setTimeout(() => {
     cursor.remove();
     cursor = createImg("textures/move.png", "Move with wasd");

@@ -16,7 +16,7 @@ A simplistic first-person puzzle game, reminiscent of the likes of [Antichamber]
 * Doors (open & close with specific buttons)✅
 * Load levels from file ✅
     * 3 total (1 tutorial, 1 larger introduction to elements, 1 ending) ✅
-* Background music ❌ & sfx ✅
+* Background music ✅ & sfx ✅
 
 ## Nice To Have
 * Simple level editor
